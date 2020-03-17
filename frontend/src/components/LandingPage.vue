@@ -9,12 +9,12 @@
                         <form @submit="onSubmit">
                             <div class="form-row mb-3">
                                 <div class="col">
-                                    <VueTelInput />
+                                    <VueTelInput v-model="telephone" />
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col">
-                                  <VueGoogleAutoComplete />
+                                  <VueGoogleAutoComplete v-model="location" />
                                 </div>
                             </div>
                             <button type="submit" value class="btn btn-dark col-10 mt-4 mb-3">Sign up</button>
@@ -44,10 +44,12 @@ export default {
   },
   methods: {
     onSubmit (e) {
+      console.log(this.telephone)
+      console.log(this.location)
       e.preventDefault()
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/api/subscribers',
+        url: 'api/subscribers/',
         data: {
           telephone: this.telephone,
           location: this.location
@@ -58,6 +60,8 @@ export default {
 
           if (status === '200') {
             self.$router.push('/')
+          } else {
+            console.log(status)
           }
         })
     }
