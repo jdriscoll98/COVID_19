@@ -18,6 +18,9 @@ from rest_framework.response import Response
 from apps.subscribers.models import Subscriber
 from apps.subscribers.serializers import SubscriberSerializer
 
+from config.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+from twilio.rest import Client
+
 
 class SubscriberViewSet(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all().order_by('-date_joined')
@@ -39,9 +42,25 @@ class SubscriberViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False, url_path='set_options', url_name='set_options')
     def set_options(self, request):
         data = request.POST
-        subscriber = Subscriber.objects.get(telephone=data.get('number'))
-        subscriber.options = data.get('options')
+        print(data)
+        subscriber = Subscriber.objects.get(telephone=data.get('number')[0])
+        subscriber.options = data.get('option')[0]
         subscriber.save()
         return Response(status=status.HTTP_200_OK)
 
+    @action(methods=['post'], detail=False, url_path='begin_flow', url_name='begin_flow')
+    def begin_flow(self, request):
+        data = request.data
+        print(data)
+        subscriber = Subscriber.objects.get(telephone=data['telephone'])
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        execution = client.studio.v1.flows('FW048094fe4cacdbaa71d02e7f5af1ebb1').executions.create(
+            to=data['telephone'], from_='+13523204710')
+        if execution:
+            data = {
+                'url': execution.url
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 

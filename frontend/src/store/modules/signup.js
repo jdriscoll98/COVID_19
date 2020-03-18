@@ -24,6 +24,17 @@ const mutations = {
 }
 
 const actions = {
+  async beginFlow ({ commit }, { telephone }) {
+    console.log('begin flow')
+    const response = await axios.post('api/subscribers/begin_flow', {
+      telephone
+    })
+    if (response.status === 200) {
+      console.log('good response')
+    } else {
+      console.log('Bad response')
+    }
+  },
   async addSubscriber ({ commit }, { telephone, location }) {
     const response = await axios.post('api/subscribers', {
       telephone,
@@ -40,6 +51,14 @@ const actions = {
       telephone
     })
     commit('checkCode', response.status)
+    if (response.status === 200) {
+      console.log('response good')
+      this.dispatch('beginFlow', {
+        telephone
+      })
+    } else {
+      console.log('response bad')
+    }
   }
 }
 
