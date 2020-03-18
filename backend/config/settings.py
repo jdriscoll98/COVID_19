@@ -7,6 +7,8 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
+from django.core.exceptions import ImproperlyConfigured
+import json
 import environ
 from datetime import timedelta
 
@@ -14,6 +16,12 @@ ROOT_DIR = environ.Path(__file__) - 2
 
 # Load operating system environment variables and then prepare to use them
 env = environ.Env()
+
+
+# Secure Secret Key Logic
+
+# JSON-based secrets module
+
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -44,9 +52,9 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -229,3 +237,6 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:8000",
     "http://127.0.0.1:8000"
 ]
+
+TWILIO_ACCOUNT_SID = "AC0b43e8ce2ffe5e86ce3f60a5a70cf2c6"
+TWILIO_AUTH_TOKEN = env.str('TWILIO_AUTH_TOKEN')

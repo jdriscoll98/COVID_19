@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <vue-google-autocomplete ref="address" id="map" name="location" classname="form-control" placeholder="Please type your address" v-on:placechanged="getAddressData">
+        <vue-google-autocomplete ref="address" id="map" name="location" classname="form-control" types="(cities)" placeholder="Please type your city" v-on:placechanged="getAddressData">
         </vue-google-autocomplete>
     </div>
 </template>
@@ -28,11 +28,10 @@ export default {
     /**
          * When the location found
          * @param {Object} addressData Data of the found location
-         * @param {Object} placeResultData PlaceResult object
          * @param {String} id Input container ID
          */
-    getAddressData: function (addressData, placeResultData, id) {
-      this.address = JSON.stringify(addressData)
+    getAddressData: function (addressData, id) {
+      this.$emit('change-place', addressData)
     }
   }
 }

@@ -3,7 +3,7 @@ import axios from 'axios'
 const state = {
   loggedIn: false,
   profile: {},
-  validation: {email: true},
+  validation: { email: true },
   authError: false
 }
 
@@ -28,13 +28,14 @@ const mutations = {
 }
 
 const actions = {
-  postLogin (context, payload) {
-    return axios.post('/api/users/login/', payload)
-      .then(response => {})
-      .catch(e => {
-        context.commit('setAuthError', true)
-        console.log(e)
-      })
+  async postLogin (context, payload) {
+    try {
+      // eslint-disable-next-line no-unused-vars
+      const response = await axios.post('/api/users/login/', payload)
+    } catch (e) {
+      context.commit('setAuthError', true)
+      console.log(e)
+    }
   },
   postRegister (context, payload) {
     return axios.post('/api/users/register/', payload)

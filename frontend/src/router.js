@@ -3,10 +3,12 @@ import VueRouter from 'vue-router'
 
 import LandingPage from '@/components/LandingPage.vue'
 import InfoPage from '@/components/InfoPage.vue'
+import VerifyPage from '@/components/VerifyPage.vue'
 
 const routes = [
   { path: '', component: LandingPage },
-  { path: '/info', component: InfoPage }
+  { path: '/info', component: InfoPage },
+  { path: '/verify', component: VerifyPage }
 ]
 
 Vue.use(VueRouter)

@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card {
   background-color: rgb(245, 245, 245, .9);
   border: 1px solid lime;

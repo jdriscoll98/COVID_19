@@ -43,6 +43,10 @@ wcwidth==0.1.7
 Werkzeug==0.15.3
 
 
+django-cors-headers==3.2.1
+twilio==6.36.0
+pycrypto==2.6.1
+
 djangorestframework==3.9.1
 
 
