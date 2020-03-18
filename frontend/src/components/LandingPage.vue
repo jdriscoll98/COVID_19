@@ -3,10 +3,13 @@
     <div class="row">
       <div class="col-md-6 offset-md-3 text-center">
         <div class="card card-block p-3">
-          <h3>COVID-19 Outbreak Upates</h3>
-          <h6>
+          <h4 class="title">COVID-19 Outbreak Upates</h4>
+          <h5 class="subtitle">
             Click
             <a href="/info">here</a> for more info
+          </h5>
+          <h6 class="error">
+            {{ error  }}
           </h6>
           <div class="col-md-8 col-sm-10 offset-md-2 offset-sm-1 mt-3">
             <form @submit="onSubmit">
@@ -28,11 +31,10 @@
     </div>
   </div>
 </template>
-
 <script>
 import VueGoogleAutoComplete from '@/components/VueGoogleAutocomplete'
 import VueTelInput from '@/components/VueTelInput'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -63,7 +65,8 @@ export default {
       }
       this.addSubscriber(data)
     }
-  }
+  },
+  computed: mapGetters(['error'])
 }
 </script>
 
@@ -76,5 +79,14 @@ export default {
 
 .btn-dark {
   border: 1px solid lime;
+}
+.error {
+  color: red;
+}
+.title {
+  font-weight: 800;
+}
+.subtitle {
+  font-weight: 400;
 }
 </style>

@@ -4,6 +4,7 @@
             <div class="col-md-6 offset-md-3">
                 <div class="card card-block pl-5 pr-5 pt-3 pb-3">
                     <h3 class="text-center">Please enter the code you received!</h3>
+                    <h5 class="error text-center"> {{ error }}</h5>
                     <form @submit="onSubmit">
                         <div class="form-group row ">
                             <div class="col-12">
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'VerifyPage',
@@ -34,7 +35,8 @@ export default {
       e.preventDefault()
       this.verifyCode(this.code)
     }
-  }
+  },
+  computed: mapGetters(['error'])
 }
 </script>
 
@@ -43,6 +45,9 @@ export default {
   background-color: rgb(245, 245, 245, .9);
   border: 1px solid lime;
   margin-top: 25%;
+}
+.error {
+  color: red;
 }
 
 </style>

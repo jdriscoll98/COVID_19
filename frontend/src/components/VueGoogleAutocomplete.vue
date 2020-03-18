@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <vue-google-autocomplete ref="address" id="map" name="location" classname="form-control" types="(cities)" placeholder="Please type your city" v-on:placechanged="getAddressData">
+        <vue-google-autocomplete ref="address" id="map" name="location" autocomplete="off" classname="form-control" types="(cities)" placeholder="Please type your city" v-on:placechanged="getAddressData">
         </vue-google-autocomplete>
     </div>
 </template>

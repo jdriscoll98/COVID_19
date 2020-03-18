@@ -3,62 +3,69 @@ import router from '../../router'
 
 const state = {
   succes: false,
-  verify_user: ''
+  verify_user: '',
+  error: ''
 }
 
-const getters = {}
+const getters = {
+  error: state => state.error
+}
 
 const mutations = {
   verifySubscriber: (state, { telephone }) => {
     state.verify_user = telephone
+    state.error = ''
     router.push('/verify')
   },
-  checkCode: (state, status) => {
-    console.log(status)
-    if (status === 200) {
-      router.push('/thankyou')
+  invalidCode: (state, error) => {
+    state.error = error.response.data.error
+  },
+  updateError: (state, { telephone, location }) => {
+    if (telephone) {
+      state.error = telephone[0]
     } else {
-      console.log('not valid status')
+      state.error = location[0]
     }
   }
+
 }
 
 const actions = {
-  async beginFlow ({ commit }, { telephone }) {
-    console.log('begin flow')
-    const response = await axios.post('api/subscribers/begin_flow', {
-      telephone
+  async beginFlow ({ commit }, telephone) {
+    const number = telephone.telephone
+    console.log(number)
+    await axios.post('api/subscribers/begin_flow', {
+      number
     })
-    if (response.status === 200) {
-      console.log('good response')
-    } else {
-      console.log('Bad response')
-    }
   },
   async addSubscriber ({ commit }, { telephone, location }) {
-    const response = await axios.post('api/subscribers', {
+    await axios.post('api/subscribers', {
       telephone,
       location
     })
-
-    commit('verifySubscriber', response.data)
+      .then(response => {
+        commit('verifySubscriber', response.data)
+      })
+      .catch(error => {
+        commit('updateError', error.response.data)
+      })
   },
   async verifyCode ({ commit }, key) {
     const telephone = state.verify_user
 
-    const response = await axios.post('api/subscribers/verify', {
+    await axios.post('api/subscribers/verify', {
       key,
       telephone
     })
-    commit('checkCode', response.status)
-    if (response.status === 200) {
-      console.log('response good')
-      this.dispatch('beginFlow', {
-        telephone
+      .then((response) => {
+        router.push('/thankyou')
+        this.dispatch('beginFlow', {
+          telephone
+        })
       })
-    } else {
-      console.log('response bad')
-    }
+      .catch(error => {
+        commit('invalidCode', error)
+      })
   }
 }
 

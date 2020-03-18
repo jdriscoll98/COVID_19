@@ -37,25 +37,23 @@ class SubscriberViewSet(viewsets.ModelViewSet):
             subscriber.save()
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data={'error':'Invalid Code'}, status=status.HTTP_401_UNAUTHORIZED)
 
     @action(methods=['post'], detail=False, url_path='set_options', url_name='set_options')
     def set_options(self, request):
         data = request.POST
-        print(data)
-        subscriber = Subscriber.objects.get(telephone=data.get('number')[0])
-        subscriber.options = data.get('option')[0]
+        subscriber = Subscriber.objects.get(telephone=data.get('number'))
+        subscriber.option = data.get('option')
         subscriber.save()
         return Response(status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=False, url_path='begin_flow', url_name='begin_flow')
     def begin_flow(self, request):
         data = request.data
-        print(data)
-        subscriber = Subscriber.objects.get(telephone=data['telephone'])
+        subscriber = Subscriber.objects.get(telephone=data['number'])
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         execution = client.studio.v1.flows('FW048094fe4cacdbaa71d02e7f5af1ebb1').executions.create(
-            to=data['telephone'], from_='+13523204710')
+            to=data['number'], from_='+13523204710', parameters={'number':data['number']})
         if execution:
             data = {
                 'url': execution.url
@@ -63,4 +61,15 @@ class SubscriberViewSet(viewsets.ModelViewSet):
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+
+    @action(methods=['post'], detail=False, url_path='unsubscribe', url_name='unsubscribe')
+    def unsubscribe(self, request):
+        data = request.data
+        try:
+            subscriber = Subscriber.objects.get(telephone=data['number'])
+            subscriber.delete()
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+
 
