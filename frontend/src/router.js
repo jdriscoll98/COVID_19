@@ -4,11 +4,13 @@ import VueRouter from 'vue-router'
 import LandingPage from '@/components/LandingPage.vue'
 import InfoPage from '@/components/InfoPage.vue'
 import VerifyPage from '@/components/VerifyPage.vue'
+import ThankYou from '@/components/ThankYou.vue'
 
 const routes = [
-  { path: '', component: LandingPage },
+  { path: '/', component: LandingPage },
   { path: '/info', component: InfoPage },
-  { path: '/verify', component: VerifyPage }
+  { path: '/verify', component: VerifyPage },
+  { path: '/thankyou', component: ThankYou }
 ]
 
 Vue.use(VueRouter)
