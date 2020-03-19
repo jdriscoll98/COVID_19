@@ -19,7 +19,9 @@ from apps.subscribers.models import Subscriber
 from apps.subscribers.serializers import SubscriberSerializer
 
 from config.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+from Crypto.Random import random
 from twilio.rest import Client
+
 
 
 class SubscriberViewSet(viewsets.ModelViewSet):
@@ -43,8 +45,18 @@ class SubscriberViewSet(viewsets.ModelViewSet):
     def set_options(self, request):
         data = request.POST
         subscriber = Subscriber.objects.get(telephone=data.get('number'))
-        subscriber.option = data.get('option')
-        subscriber.save()
+        if not subscriber.option:
+            subscriber.option = True
+            subscriber.save()
+        return Response(status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='reset', url_name='reset')
+    def reset(self, request):
+        data = request.POST
+        subscriber = Subscriber.objects.get(telephone=data.get('number'))
+        if subscriber.option:
+            subscriber.option = False
+            subscriber.save()
         return Response(status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=False, url_path='begin_flow', url_name='begin_flow')
@@ -72,4 +84,23 @@ class SubscriberViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
+    @action(methods=['post'], detail=False, url_path='resend', url_name='resend')
+    def resend(self, request):
+        data = request.data
+        try:
+            subcriber = Subscriber.objects.get(telephone=data['telephone'])
+            key = random.randint(100000, 999999)
+            subcriber.key = key
+            subcriber.save()
+            client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+            message = client.messages.create(
+            body=f'Your validation key is {key}',
+            from_="13523204710",
+            to=data['telephone']
+            )
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print(str(e))
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+            
 

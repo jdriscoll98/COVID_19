@@ -2,7 +2,6 @@ import axios from 'axios'
 import router from '../../router'
 
 const state = {
-  succes: false,
   verify_user: '',
   error: ''
 }
@@ -31,6 +30,16 @@ const mutations = {
 }
 
 const actions = {
+  async resendCode () {
+    const telephone = state.verify_user
+    await axios.post('api/subscribers/resend', {
+      telephone
+    })
+      .catch(e => {
+      // pass
+      }
+      )
+  },
   async beginFlow ({ commit }, telephone) {
     const number = telephone.telephone
     console.log(number)

@@ -25,7 +25,11 @@ class SubscriberSerializer(serializers.HyperlinkedModelSerializer):
         parsed_number = phonenumbers.parse(value, "US")
         number = f"+{parsed_number.country_code}{parsed_number.national_number}"
         if Subscriber.objects.filter(telephone=number).exists():
-            raise serializers.ValidationError("Sorry, this number is already registered")
+            subscriber = Subscriber.objects.get(telephone=number)
+            if subscriber.verified:
+                raise serializers.ValidationError("Sorry, this number is already registered")
+            else:
+                subscriber.delete()
         return value
 
     def validate_location(self, value):

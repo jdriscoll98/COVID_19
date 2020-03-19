@@ -88,8 +88,8 @@ class Command(BaseCommand):
                 country='us', category='business', q='coronavirus')['articles'][:3],
             'science' :newsapi.get_top_headlines(
                 country='us', category='science', q='coronavirus')['articles'][:3],
-            'entertainment': newsapi.get_top_headlines(
-                country='us', category='entertainment', q='coronavirus')['articles'][:3],
+            'health': newsapi.get_top_headlines(
+                country='us', category='health', q='coronavirus')['articles'][:3],
             'sports' :newsapi.get_top_headlines(
                 country='us', category='sports', q='coronavirus')['articles'][:3]
         }
@@ -99,28 +99,33 @@ class Command(BaseCommand):
             
 
         for sub in Subscriber.objects.filter(verified=True):
-            if sub.option == 'both' or sub.option == 'one':
-                location = json.loads(sub.location)
-                country_code = pycountry.countries.search_fuzzy(location.get('country'))[0].alpha_2
-                country_locations = [location for location in locations if location['country_code'] == country_code]
-                country_latest = list(map(lambda location: location['latest'], country_locations))
-                country_data = {
-                    'name': location.get('country'),
-                    'confirmed': sum(map(lambda latest: latest['confirmed'], country_latest)),
-                    'recovered': sum(map(lambda latest: latest['recovered'], country_latest)),
-                    'deaths': sum(map(lambda latest: latest['deaths'], country_latest))
-                }
-                state = abbrev_us_state[location['administrative_area_level_1']]
-                state_locations = [location for location in country_locations if location['province'] == state]
-                state_latest = list(
-                    map(lambda location: location['latest'], state_locations))
-                state_data = {
-                    'name': state,
-                    'confirmed': sum(map(lambda latest: latest['confirmed'], state_latest)),
-                    'recovered': sum(map(lambda latest: latest['recovered'], state_latest)),
-                    'deaths': sum(map(lambda latest: latest['deaths'], state_latest))
-                }
-                message = f""" \n
+            location = json.loads(sub.location)
+            country_code = pycountry.countries.search_fuzzy(location.get('country'))[0].alpha_2
+            country_locations = [location for location in locations if location['country_code'] == country_code]
+            country_latest = list(map(lambda location: location['latest'], country_locations))
+            country_data = {
+                'name': location.get('country'),
+                'confirmed': sum(map(lambda latest: latest['confirmed'], country_latest)),
+                'recovered': sum(map(lambda latest: latest['recovered'], country_latest)),
+                'deaths': sum(map(lambda latest: latest['deaths'], country_latest))
+            }
+            state = abbrev_us_state[location['administrative_area_level_1']]
+            state_locations = [location for location in country_locations if location['province'] == state]
+            state_latest = list(
+                map(lambda location: location['latest'], state_locations))
+            state_data = {
+                'name': state,
+                'confirmed': sum(map(lambda latest: latest['confirmed'], state_latest)),
+                'recovered': sum(map(lambda latest: latest['recovered'], state_latest)),
+                'deaths': sum(map(lambda latest: latest['deaths'], state_latest))
+            }
+            
+            if sub.option:
+                option_string = "To stop receiveing news articles, simply reply \"RESET\""
+            else:
+                option_string = "To add news articles to your daily updates, reply \"RENEW\""
+
+            message = f""" \n
 COVID-19 Updater \n
 ---------------- \n
 World Data:  \n
@@ -138,17 +143,21 @@ World Data:  \n
     Deaths: { state_data['deaths']}\n
     Recoverd: {state_data['recovered']}\n
 \n
+
+At anytime, text "STOP" to unsubscribe from this number. \n
+{option_string}
 """
-                client.messages.create(
+            client.messages.create(
                     body=message,
                     from_="13523204710",
                     to=sub.telephone
                 )
-            if sub.option == 'both' or sub.option == 'two':
+            if sub.option:
                 message = f"""
 News Articles
 -------------
-Health / Science:
+Science:
+
 {articles['science'][0]['title']}
 {articles['science'][0]['url']}
 
@@ -160,6 +169,7 @@ Health / Science:
 
 
 Business:
+
 {articles['business'][0]['title']}
 {articles['business'][0]['url']}
 
@@ -169,18 +179,20 @@ Business:
 {articles['business'][2]['title']}
 {articles['business'][2]['url']}
 
-Entertainment:
-{articles['entertainment'][0]['title']}
-{articles['entertainment'][0]['url']}
+Health:
 
-{articles['entertainment'][1]['title']}
-{articles['entertainment'][1]['url']}
+{articles['health'][0]['title']}
+{articles['health'][0]['url']}
 
-{articles['entertainment'][2]['title']}
-{articles['entertainment'][2]['url']}
+{articles['health'][1]['title']}
+{articles['health'][1]['url']}
+
+{articles['health'][2]['title']}
+{articles['health'][2]['url']}
 
 
 Sports:
+
 {articles['sports'][0]['title']}
 {articles['sports'][0]['url']}
 

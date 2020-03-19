@@ -8,11 +8,12 @@
                     <form @submit="onSubmit">
                         <div class="form-group row ">
                             <div class="col-12">
-                            <input type="text" class="form-control mb-2" v-model="code" name="code" />
+                            <input  id="single-factor-code-text-field" type="text" class="form-control mb-2" autocomplete="one-time-code" v-model="code" name="code" />
                             </div>
                             <button class="btn btn-success btn-sm col-md-6 offset-md-3 col-10 offset-1" type="submit">Verify</button>
                         </div>
                     </form>
+                    <div class="text-center"><button class="btn btn-light bg-transparent" @click="resendCode">Didn't receive a code? Click here to resend</button></div>
                 </div>
             </div>
         </div>
@@ -30,11 +31,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['verifyCode']),
+    ...mapActions(['verifyCode', 'resendCode']),
     onSubmit (e) {
       e.preventDefault()
       this.verifyCode(this.code)
     }
+  },
+  resendCode () {
+    this.$set(this.code, '')
+    this.resendCode()
   },
   computed: mapGetters(['error'])
 }
@@ -48,6 +53,11 @@ export default {
 }
 .error {
   color: red;
+}
+.bg-transparent {
+  color: blue;
+  text-decoration: underline;
+  border: none;
 }
 
 </style>
