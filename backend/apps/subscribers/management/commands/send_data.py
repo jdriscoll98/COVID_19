@@ -5,6 +5,7 @@ from apps.subscribers.models import Subscriber
 import pycountry
 from pprint import pprint
 from config.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+from config.settings import BITLY_ACCOUNT, BITLY_PASSWORD
 from twilio.rest import Client
 from newsapi import NewsApiClient
 import bitly_api
@@ -79,7 +80,7 @@ class Command(BaseCommand):
         world_data = requests.get(f"{api}/latest").json()['latest']
         locations = requests.get(f"{api}/locations").json()['locations']
         response = requests.post(
-            'https://api-ssl.bitly.com/oauth/access_token', auth=('jackdriscoll777@gmail.com', 'Quavo2016!'))
+            'https://api-ssl.bitly.com/oauth/access_token', auth=(BITLY_ACCOUNT, BITLY_PASSWORD))
         auth_token = response.text
         c = bitly_api.Connection(access_token=auth_token)
         
@@ -119,7 +120,7 @@ class Command(BaseCommand):
                 'recovered': sum(map(lambda latest: latest['recovered'], state_latest)),
                 'deaths': sum(map(lambda latest: latest['deaths'], state_latest))
             }
-            
+
             if sub.option:
                 option_string = "To stop receiveing news articles, simply reply \"RESET\""
             else:
