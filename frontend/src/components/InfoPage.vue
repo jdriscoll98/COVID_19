@@ -7,8 +7,8 @@
                     <div class="list pl-3 pr-3">
 
                         <ul>
-                            <li>A daily text listing the number of cases worldwide, around your area, and in your city</li>
-                            <li>(Optional) A daily text with a list of news articles concerning COVID-19</li>
+                            <li>A daily text listing the number of cases worldwide, in your country, and your state/province.</li>
+                            <li>(Optional) A daily text with  4 of the top news articles concerning COVID-19</li>
                         </ul>
                     </div>
                     <a href="/" class="btn-success text-center py-1">Go Back and Sign Up!</a>
