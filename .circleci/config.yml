@@ -1,38 +1,17 @@
-version: 2
+version: 2.1
 jobs:
-  one:
-      docker:
-        - image: circleci/ruby:2.4.1
-      steps:
-        - checkout
-        - run: echo "A first hello"
-        - run: mkdir -p my_workspace
-        - run: echo "Trying out workspaces" > my_workspace/echo-output
-        - persist_to_workspace:
-            root: my_workspace # absolute path or relative to working_directory
-            paths: # relative to root
-              - echo-output                                                                    
-  two:
-      docker:
-        - image: circleci/ruby:2.4.1
-      steps:
-        - checkout
-        - run: echo "A more familiar hi!"
-        - attach_workspace:
-            at: my_workspace # absolute or relative to working_directory
-            
-        - run: |
-            if [[ $(cat my_workspace/echo-output) == "Trying out workspaces" ]]; then
-              echo "It worked!";
-            else
-              echo "Nope!"; exit 1
-            fi
-
-workflows:
-  version: 2
-  one_and_two:
-    jobs:
-      - one
-      - two:
-          requires:
-            - one
+  build:
+    docker:
+      image: alpine:3.7
+    steps:
+      - checkout
+      - run:
+          name: The First Step
+          command: |
+            echo 'Hello World'
+            echo 'This is the delivery pipeline'
+      - run:
+          name: Code has Arrived
+          command: |
+            ls -al
+            echo '^This should look familiar^'
