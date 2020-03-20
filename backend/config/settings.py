@@ -39,7 +39,8 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'django_extensions',
-    'django_twilio'
+    'django_twilio',
+    'coverage'
 ]
 
 LOCAL_APPS = [

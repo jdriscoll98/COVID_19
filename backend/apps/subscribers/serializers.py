@@ -34,7 +34,7 @@ class SubscriberSerializer(serializers.HyperlinkedModelSerializer):
     def validate_location(self, value):
         if value == "{}":
             raise serializers.ValidationError(
-                "Please user the autocomplete feature for the location")
+                "Please use the autocomplete feature for the location")
         return value
 
     def create(self, validated_data):

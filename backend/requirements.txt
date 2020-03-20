@@ -3,6 +3,7 @@ attrs==18.2.0
 backcall==0.1.0
 certifi==2018.8.24
 chardet==3.0.4
+coverage==5.0.4
 decorator==4.3.0
 Django==2.2.10
 django-environ==0.4.5
