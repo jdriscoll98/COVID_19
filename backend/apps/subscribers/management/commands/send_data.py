@@ -102,13 +102,10 @@ class Command(BaseCommand):
             for article in articles[key]:
                 article['url'] = c.shorten(article['url'])['url']
             
-        today = datetime.date.today()
+        today = datetime.date.today() - datetime.timedelta(days=1)
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
-
         today = today.strftime("%m-%d-%Y")
 
-        yesterday = '03-18-2020'
-        today = '03-19-2020'
         
         data = requests.get(
             f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{today}.csv')
