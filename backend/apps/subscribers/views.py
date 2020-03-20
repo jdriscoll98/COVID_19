@@ -25,12 +25,11 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.permissions import BasePermission
 
 from pprint import pprint
-
 class LocalOnly(BasePermission):
     message = 'Not allowed'
     def has_permission(self, request, view):
         print(request.META['HTTP_HOST'])
-        if request.META['HTTP_HOST'] == 'localhost:8000':
+        if request.META['HTTP_HOST'] == '159.89.232.92:8000':
             return True
         return False
 
