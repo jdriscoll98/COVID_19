@@ -25,19 +25,17 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.permissions import BasePermission
 
 from pprint import pprint
-class LocalOnly(BasePermission):
-    message = 'Not allowed'
-    def has_permission(self, request, view):
-        pprint(request.META)
-        if request.META['HTTP_HOST'] == '174.138.32.38:8000':
-            return True
-        return True
 
 class SubscriberViewSet(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all().order_by('-date_joined')
     serializer_class = SubscriberSerializer
-    permission_classes = [LocalOnly]
 
+    def list(self, request):
+        return Response({})
+
+    def retrieve(self, request, pk=None):
+        return Response({})
+    
 
     @action(methods=['post'], detail=False, url_path='verify', url_name='verify')
     def verify(self, request):
