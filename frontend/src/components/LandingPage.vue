@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-6 offset-md-3 text-center">
         <div class="card card-block p-3">
-          <h4 class="title">COVID-19 Outbreak Upates</h4>
+          <h4 class="title">COVID-19 Outbreak Updates</h4>
           <h5 class="subtitle">
             Click
             <a href="/info">here</a> for more info

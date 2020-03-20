@@ -94,7 +94,7 @@ class SubscriberViewSet(viewsets.ModelViewSet):
             subcriber.save()
             client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
             message = client.messages.create(
-            body=f'Your validation key is {key}',
+            body=f'Your validation code is {key}',
             from_="13523204710",
             to=data['telephone']
             )
