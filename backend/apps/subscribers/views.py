@@ -28,7 +28,7 @@ from pprint import pprint
 class LocalOnly(BasePermission):
     message = 'Not allowed'
     def has_permission(self, request, view):
-        print(request.META['HTTP_HOST'])
+        pprint(request.META)
         if request.META['HTTP_HOST'] == '174.138.32.38:8000':
             return True
         return True
