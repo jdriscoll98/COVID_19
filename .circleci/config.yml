@@ -26,6 +26,7 @@ jobs:
               echo "It worked!";
             else:
               echo "Nope!"; exit 1
+            fi
 
 workflows:
   version: 2
