@@ -103,12 +103,15 @@ class Command(BaseCommand):
                 article['url'] = c.shorten(article['url'])['url']
             
         today = datetime.date.today()
-        print(today)
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
-        print(yesterday)
+
+        today = today.strftime("%m-%d-%Y")
+
+        yesterday = '03-18-2020'
+        today = '03-19-2020'
         
         data = requests.get(
-            f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{today.strftime("%m-%d-%Y")}.csv')
+            f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{today}.csv')
         while data.status_code == 404:
             print('waiting for update')
             print('sleeping for 60 seconds')
