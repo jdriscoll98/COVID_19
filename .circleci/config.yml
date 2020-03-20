@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  Hello-World:
+  build:
     docker:
       - image: alpine:3.7
     steps:
