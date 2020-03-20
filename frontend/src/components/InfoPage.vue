@@ -5,10 +5,10 @@
                 <div class="card card-block pl-5 pr-5 pt-3 pb-3">
                     <h4 class="text-center title">What am I signing up for?</h4>
                     <div class="list pl-3 pr-3">
-                        <h6 class="text-center subtitle">Upon signing up, you will be promted through text to choose from the options below</h6>
+
                         <ul>
                             <li>A daily text listing the number of cases worldwide, around your area, and in your city</li>
-                            <li>A daily text with a list of news articles concerning COVID-19</li>
+                            <li>(Optional) A daily text with a list of news articles concerning COVID-19</li>
                         </ul>
                     </div>
                     <a href="/" class="btn-success text-center py-1">Go Back and Sign Up!</a>
