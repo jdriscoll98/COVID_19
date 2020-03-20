@@ -78,8 +78,18 @@ class Command(BaseCommand):
 
     def get_percent_increase(self, today, yesterday):
         if yesterday == 0:
-            return 100
-        return round(100 * ((today - yesterday) / yesterday), 2)
+            if today == 0:
+                return 'No change'
+            else:
+                return f"100% increase"
+        percent = round(100 * ((today - yesterday) / yesterday), 2)
+        if percent == 0:
+            return 'No change'
+        elif percent > 0:
+            return f'{percent}% increase'
+        else:
+            percent = abs(percent)
+            return f'{percent}% decrease'
 
     def handle(self, *args, **kwargs):
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -180,28 +190,27 @@ COVID-19 Updater \n
 ---------------- \n
 World Data:  \n
     Confirmed: { world_data['confirmed']} \n
-    { world_data['confirmed_increase']}% change \n
+    { world_data['confirmed_increase']} \n
     Deaths: { world_data['deaths']}\n
-    { world_data['deaths_increase']}% change \n
+    { world_data['deaths_increase']}\n
     Recoverd: {world_data['recovered']}\n
-    { world_data['recovered_increase']}% change \n
+    { world_data['recovered_increase']}\n
 \n
 { country_data['name']}: \n
     Confirmed: { country_data['confirmed']} \n
-    { country_data['confirmed_increase']}% change \n
+    { country_data['confirmed_increase']} \n
     Deaths: { country_data['deaths']}\n
-    { country_data['deaths_increase']}% change \n
+    { country_data['deaths_increase']} \n
     Recoverd: {country_data['recovered']}\n
-    { country_data['recovered_increase']}% change \n
+    { country_data['recovered_increase']} \n
 \n
 { state }: \n
     Confirmed: { state_data['Confirmed']} \n
-    { state_confirmed_increase}% change \n
+    { state_confirmed_increase} \n
     Deaths: { state_data['Deaths']}\n
-    { state_death_increase}% change \n
+    { state_death_increase} \n
     Recoverd: {state_data['Recovered']}\n
-    { state_recovered_increase}% change \n
-    
+    { state_recovered_increase} \n
 \n
 
 At anytime, text "STOP" to unsubscribe from this number. \n
