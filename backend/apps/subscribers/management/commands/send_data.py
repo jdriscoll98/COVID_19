@@ -102,7 +102,7 @@ class Command(BaseCommand):
             for article in articles[key]:
                 article['url'] = c.shorten(article['url'])['url']
             
-        today = datetime.date.today() - datetime.timedelta(days=1)
+        today = datetime.date.today()
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         today = today.strftime("%m-%d-%Y")
 
