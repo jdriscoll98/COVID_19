@@ -5,7 +5,6 @@ from django.conf import settings
 from rest_framework import serializers
 
 from apps.subscribers.models import Subscriber
-from apps.subscribers.forms import SubscriberForm
 from config.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 from twilio.rest import Client
 

@@ -233,11 +233,9 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FileUploadParser'
     ]
 }
-
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    
 ]
 
 TWILIO_ACCOUNT_SID = "AC0b43e8ce2ffe5e86ce3f60a5a70cf2c6"
