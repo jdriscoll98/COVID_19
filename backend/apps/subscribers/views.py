@@ -29,9 +29,9 @@ class LocalOnly(BasePermission):
     message = 'Not allowed'
     def has_permission(self, request, view):
         print(request.META['HTTP_HOST'])
-        if request.META['HTTP_HOST'] == '159.89.232.92:8000':
+        if request.META['HTTP_HOST'] == '174.138.32.38:8000':
             return True
-        return False
+        return True
 
 class SubscriberViewSet(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all().order_by('-date_joined')
