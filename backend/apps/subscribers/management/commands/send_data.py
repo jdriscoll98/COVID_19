@@ -11,6 +11,7 @@ from twilio.rest import Client
 from newsapi import NewsApiClient
 import bitly_api
 import datetime
+import time
 
 us_state_abbrev = {
     'Alabama': 'AL',
@@ -102,10 +103,20 @@ class Command(BaseCommand):
                 article['url'] = c.shorten(article['url'])['url']
             
         today = datetime.date.today().strftime("%m-%d-%Y")
+        print(today)
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
+        print(yesterday)
         
         data = requests.get(
             f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{today}.csv')
+        while data.status_code == 404:
+            print('waiting for update')
+            print('sleeping for 60 seconds')
+            time.sleep(60)
+            data = requests.get(
+                f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{today}.csv')
+        else:
+            print('ready!')
         todays_data = list(csv.DictReader(data.text.splitlines()))
         data = requests.get(
             f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{yesterday}.csv')
