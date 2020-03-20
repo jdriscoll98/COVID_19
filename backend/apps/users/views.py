@@ -8,7 +8,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from uuid import uuid4
-mport requests
+from rest_framework.permissions import IsAdminUser
+import requests
 
 
 class UserViewSet(viewsets.ModelViewSet):

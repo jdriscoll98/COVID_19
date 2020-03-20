@@ -21,12 +21,24 @@ from apps.subscribers.serializers import SubscriberSerializer
 from config.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 from Crypto.Random import random
 from twilio.rest import Client
+from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import BasePermission
 
+from pprint import pprint
 
+class LocalOnly(BasePermission):
+    message = 'Not allowed'
+    def has_permission(self, request, view):
+        print(request.META['HTTP_HOST'])
+        if request.META['HTTP_HOST'] == 'localhost:8000':
+            return True
+        return False
 
 class SubscriberViewSet(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all().order_by('-date_joined')
     serializer_class = SubscriberSerializer
+    permission_classes = [LocalOnly]
+
 
     @action(methods=['post'], detail=False, url_path='verify', url_name='verify')
     def verify(self, request):
