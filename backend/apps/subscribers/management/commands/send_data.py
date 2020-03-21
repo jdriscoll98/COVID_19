@@ -217,7 +217,8 @@ World Data:  \n
 
 At anytime, text "STOP" to unsubscribe from this number. \n
 {option_string}
-"""         try:
+"""         
+            try:
                 client.messages.create(
                         body=message,
                         from_="13523204710",
