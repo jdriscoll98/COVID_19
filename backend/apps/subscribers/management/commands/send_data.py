@@ -250,7 +250,7 @@ Sports:
 {articles['sports'][0]['url']}
 
 
-"""             
+"""
             try:
                 client.messages.create(
                     body=message,
@@ -258,6 +258,7 @@ Sports:
                     to=sub.telephone
                 )
             except Exception as e:
+                print('exception')
                 pass
 
 
