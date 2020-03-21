@@ -112,11 +112,10 @@ class Command(BaseCommand):
             for article in articles[key]:
                 article['url'] = c.shorten(article['url'])['url']
             
-        today = datetime.date.today()
+        today = datetime.date.today() - timedelta(days=1)
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         today = today.strftime("%m-%d-%Y")
-        today = '3-20-2020'
-        yesterday = '3-19-2020'
+
 
         
         data = requests.get(
@@ -188,6 +187,7 @@ class Command(BaseCommand):
                 option_string = "To add news articles to your daily updates, reply \"RENEW\""
 
             message = f""" \n
+Duplicate message due to error \n
 COVID-19 Updater \n
 ---------------- \n
 World Data:  \n
@@ -217,12 +217,14 @@ World Data:  \n
 
 At anytime, text "STOP" to unsubscribe from this number. \n
 {option_string}
-"""         
-            client.messages.create(
-                    body=message,
-                    from_="13523204710",
-                    to=sub.telephone
-                )
+"""         try:
+                client.messages.create(
+                        body=message,
+                        from_="13523204710",
+                        to=sub.telephone
+                    )
+            except Exception as e:
+                pass
             if sub.option:
                 message = f"""
 News Articles
@@ -248,11 +250,13 @@ Sports:
 {articles['sports'][0]['url']}
 
 
-"""
-                client.messages.create(
-                    body=message,
-                    from_="13523204710",
-                    to=sub.telephone
-                )
+"""             try:
+                    client.messages.create(
+                        body=message,
+                        from_="13523204710",
+                        to=sub.telephone
+                    )
+                except Exception as e:
+                    pass
 
 
