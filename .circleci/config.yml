@@ -9,6 +9,9 @@ jobs:
           name: "make .env file"
           command: "./makeenv.sh"
       - run:
+          name: files
+          command: "ls -l"
+      - run:
           name: Spin up container
           command: 'docker-compose up -d'
       
