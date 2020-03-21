@@ -30,13 +30,14 @@ class SubscriberViewSet(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all().order_by('-date_joined')
     serializer_class = SubscriberSerializer
 
+    ## Not used by app so I want to ensure the endpoint does nothing
     def list(self, request):
         return Response({})
 
     def retrieve(self, request, pk=None):
         return Response({})
     
-
+    
     @action(methods=['post'], detail=False, url_path='verify', url_name='verify')
     def verify(self, request):
         data = request.data
@@ -54,6 +55,7 @@ class SubscriberViewSet(viewsets.ModelViewSet):
     def set_options(self, request):
         data = request.POST
         subscriber = Subscriber.objects.get(telephone=data.get('number'))
+        # only change the option if need do
         if not subscriber.option:
             subscriber.option = True
             subscriber.save()
@@ -73,8 +75,9 @@ class SubscriberViewSet(viewsets.ModelViewSet):
         data = request.data
         subscriber = Subscriber.objects.get(telephone=data['number'])
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        # Starts a conversation with the client
         execution = client.studio.v1.flows('FW048094fe4cacdbaa71d02e7f5af1ebb1').executions.create(
-            to=data['number'], from_='+13523204710', parameters={'number':data['number']})
+            to=data['number'], from_='+13523061075', parameters={'number': data['number']})
         if execution:
             data = {
                 'url': execution.url
@@ -94,7 +97,7 @@ class SubscriberViewSet(viewsets.ModelViewSet):
             client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
             message = client.messages.create(
             body=f'Your validation code is {key}',
-            from_="13523204710",
+                from_="+13523061075",
             to=data['telephone']
             )
             return Response(status=status.HTTP_200_OK)

@@ -44,7 +44,7 @@ class SubscriberSerializer(serializers.HyperlinkedModelSerializer):
         key = random.randint(100000, 999999)
         message = client.messages.create(
             body=f'Your validation key is {key}',
-            from_="13523204710",
+            from_="+13523061075",
             to=telephone
         )
         return Subscriber.objects.create(key=key, telephone=message.to, **validated_data)
