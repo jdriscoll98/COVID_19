@@ -1,11 +1,39 @@
-version: 2.1
+version: 2
 jobs:
   build:
-    docker:
-      - image: alpine:3.7
+    machine: 
+      image: ubuntu-1604:201903-01
     steps:
+      - checkout
       - run:
-          name: Hello World
+          name: Spin up container
+          command: 'docker-compose up'
+  test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Spin up container
+          command: 'docker-compose up -d'
+      - run:
+          name: Run tests
           command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
+            docker exec -it covid19_backend_1 coverage run manage.py test subscribers
+            docker exec -it covid19_backend_1 coverage report
+            docker exec -it covid19_backend_1 coverage html --include=apps/subscribers/"*"
+      - run:
+          name: Copy tests
+          command: |
+            docker cp covid19_backend_1:htmlcov/ /htmlcov
+      - store_artifacts:
+          path: /htmlcov
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs: 
+      - build
+      - test:
+          requires:
+            - build
