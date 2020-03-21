@@ -71,7 +71,7 @@ Sports:
 """
 
         # Gather dates for data fetching
-        today = datetime.datetime.now(east).today() - datetime.timedelta(days=1)
+        today = datetime.datetime.now(east).today()
         self.yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         self.today = today.strftime("%m-%d-%Y")
         
