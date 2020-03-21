@@ -147,119 +147,120 @@ class Command(BaseCommand):
 
         
         for sub in Subscriber.objects.filter(verified=True):
-            location = json.loads(sub.location)
-            country_code = pycountry.countries.search_fuzzy(location.get('country'))[0].alpha_2
-
-            today_country_locations = [
-                location for location in todays_data if (location['Country/Region'] == country_code or location['Country/Region'] == location.get('country'))]
-            last_country_locations = [
-                location for location in yesterdays_data if (location['Country/Region'] == country_code or location['Country/Region'] == location.get('country'))]
-            country_data = {
-                'name': location.get('country'),
-                'confirmed': sum(map(lambda latest: int(latest['Confirmed']), today_country_locations)),
-                'last_confirmed': sum(map(lambda latest: int(latest['Confirmed']), last_country_locations)),
-                'recovered': sum(map(lambda latest: int(latest['Recovered']), today_country_locations)),
-                'last_recovered': sum(map(lambda latest: int(latest['Recovered']), last_country_locations)),
-                'deaths': sum(map(lambda latest: int(latest['Deaths']), today_country_locations)),
-                'last_deaths': sum(map(lambda latest: int(latest['Deaths']), last_country_locations))
-            }
-            country_data['confirmed_increase'] = self.get_percent_increase(country_data['confirmed'], country_data['last_confirmed'])
-            country_data['recovered_increase'] = self.get_percent_increase(country_data['recovered'], country_data['last_recovered'])
-            country_data['deaths_increase'] = self.get_percent_increase(country_data['deaths'], country_data['last_deaths'])
-
-            if location['country'] == 'United States':
-                state = abbrev_us_state[location['administrative_area_level_1']]
-            else: 
-                state = location['administrative_area_level_1']
-
-            state_data = [
-                location for location in today_country_locations if location['Province/State'] == state][0]
-            last_state_data = [
-                location for location in last_country_locations if location['Province/State'] == state][0]
-
-            state_confirmed_increase = self.get_percent_increase(int(state_data['Confirmed']), int(last_state_data['Confirmed']))
-            state_recovered_increase = self.get_percent_increase(int(state_data['Recovered']), int(last_state_data['Recovered']))
-            state_death_increase = self.get_percent_increase(int(state_data['Deaths']), int(last_state_data['Deaths']))
-
-            if sub.option:
-                option_string = "To stop receiveing news articles, simply reply \"RESET\""
-            else:
-                option_string = "To add news articles to your daily updates, reply \"RENEW\""
-
-            message = f""" \n
-Duplicate message due to error \n
-COVID-19 Updater \n
----------------- \n
-World Data:  \n
-    Confirmed: { world_data['confirmed']} \n
-    { world_data['confirmed_increase']} \n
-    Deaths: { world_data['deaths']}\n
-    { world_data['deaths_increase']}\n
-    Recoverd: {world_data['recovered']}\n
-    { world_data['recovered_increase']}\n
-\n
-{ country_data['name']}: \n
-    Confirmed: { country_data['confirmed']} \n
-    { country_data['confirmed_increase']} \n
-    Deaths: { country_data['deaths']}\n
-    { country_data['deaths_increase']} \n
-    Recoverd: {country_data['recovered']}\n
-    { country_data['recovered_increase']} \n
-\n
-{ state }: \n
-    Confirmed: { state_data['Confirmed']} \n
-    { state_confirmed_increase} \n
-    Deaths: { state_data['Deaths']}\n
-    { state_death_increase} \n
-    Recoverd: {state_data['Recovered']}\n
-    { state_recovered_increase} \n
-\n
-
-At anytime, text "STOP" to unsubscribe from this number. \n
-{option_string}
-"""         
             try:
-                client.messages.create(
+                location = json.loads(sub.location)
+                country_code = pycountry.countries.search_fuzzy(location.get('country'))[0].alpha_2
+
+                today_country_locations = [
+                    location for location in todays_data if (location['Country/Region'] == country_code or location['Country/Region'] == location.get('country'))]
+                last_country_locations = [
+                    location for location in yesterdays_data if (location['Country/Region'] == country_code or location['Country/Region'] == location.get('country'))]
+                country_data = {
+                    'name': location.get('country'),
+                    'confirmed': sum(map(lambda latest: int(latest['Confirmed']), today_country_locations)),
+                    'last_confirmed': sum(map(lambda latest: int(latest['Confirmed']), last_country_locations)),
+                    'recovered': sum(map(lambda latest: int(latest['Recovered']), today_country_locations)),
+                    'last_recovered': sum(map(lambda latest: int(latest['Recovered']), last_country_locations)),
+                    'deaths': sum(map(lambda latest: int(latest['Deaths']), today_country_locations)),
+                    'last_deaths': sum(map(lambda latest: int(latest['Deaths']), last_country_locations))
+                }
+                country_data['confirmed_increase'] = self.get_percent_increase(country_data['confirmed'], country_data['last_confirmed'])
+                country_data['recovered_increase'] = self.get_percent_increase(country_data['recovered'], country_data['last_recovered'])
+                country_data['deaths_increase'] = self.get_percent_increase(country_data['deaths'], country_data['last_deaths'])
+
+                if location['country'] == 'United States':
+                    state = abbrev_us_state[location['administrative_area_level_1']]
+                else: 
+                    state = location['administrative_area_level_1']
+
+                state_data = [
+                    location for location in today_country_locations if location['Province/State'] == state][0]
+                last_state_data = [
+                    location for location in last_country_locations if location['Province/State'] == state][0]
+
+                state_confirmed_increase = self.get_percent_increase(int(state_data['Confirmed']), int(last_state_data['Confirmed']))
+                state_recovered_increase = self.get_percent_increase(int(state_data['Recovered']), int(last_state_data['Recovered']))
+                state_death_increase = self.get_percent_increase(int(state_data['Deaths']), int(last_state_data['Deaths']))
+
+                if sub.option:
+                    option_string = "To stop receiveing news articles, simply reply \"RESET\""
+                else:
+                    option_string = "To add news articles to your daily updates, reply \"RENEW\""
+
+                message = f""" \n
+    Duplicate message due to error \n
+    COVID-19 Updater \n
+    ---------------- \n
+    World Data:  \n
+        Confirmed: { world_data['confirmed']} \n
+        { world_data['confirmed_increase']} \n
+        Deaths: { world_data['deaths']}\n
+        { world_data['deaths_increase']}\n
+        Recoverd: {world_data['recovered']}\n
+        { world_data['recovered_increase']}\n
+    \n
+    { country_data['name']}: \n
+        Confirmed: { country_data['confirmed']} \n
+        { country_data['confirmed_increase']} \n
+        Deaths: { country_data['deaths']}\n
+        { country_data['deaths_increase']} \n
+        Recoverd: {country_data['recovered']}\n
+        { country_data['recovered_increase']} \n
+    \n
+    { state }: \n
+        Confirmed: { state_data['Confirmed']} \n
+        { state_confirmed_increase} \n
+        Deaths: { state_data['Deaths']}\n
+        { state_death_increase} \n
+        Recoverd: {state_data['Recovered']}\n
+        { state_recovered_increase} \n
+    \n
+
+    At anytime, text "STOP" to unsubscribe from this number. \n
+    {option_string}
+    """         
+                try:
+                    client.messages.create(
+                            body=message,
+                            from_="13523204710",
+                            to=sub.telephone
+                        )
+                except Exception as e:
+                    pass
+                if sub.option:
+                    message = f"""
+    News Articles
+    -------------
+    Science:
+
+    {articles['science'][0]['title']}
+    {articles['science'][0]['url']}
+
+    Business:
+
+    {articles['business'][0]['title']}
+    {articles['business'][0]['url']}
+
+    Health:
+
+    {articles['health'][0]['title']}
+    {articles['health'][0]['url']}
+
+    Sports:
+
+    {articles['sports'][0]['title']}
+    {articles['sports'][0]['url']}
+
+
+    """
+                try:
+                    client.messages.create(
                         body=message,
                         from_="13523204710",
                         to=sub.telephone
                     )
+                except Exception as e:
+                    print('exception')
+                    pass
             except Exception as e:
                 pass
-            if sub.option:
-                message = f"""
-News Articles
--------------
-Science:
-
-{articles['science'][0]['title']}
-{articles['science'][0]['url']}
-
-Business:
-
-{articles['business'][0]['title']}
-{articles['business'][0]['url']}
-
-Health:
-
-{articles['health'][0]['title']}
-{articles['health'][0]['url']}
-
-Sports:
-
-{articles['sports'][0]['title']}
-{articles['sports'][0]['url']}
-
-
-"""
-            try:
-                client.messages.create(
-                    body=message,
-                    from_="13523204710",
-                    to=sub.telephone
-                )
-            except Exception as e:
-                print('exception')
-                pass
-
-
