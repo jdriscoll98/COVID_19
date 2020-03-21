@@ -10,7 +10,7 @@ jobs:
           command: "./makeenv.sh"
       - run:
           name: Spin up container
-          command: 'docker-compose up'
+          command: 'docker-compose up -d'
       
   test:
     machine:
