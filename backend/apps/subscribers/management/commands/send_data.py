@@ -250,13 +250,14 @@ Sports:
 {articles['sports'][0]['url']}
 
 
-"""             try:
-                    client.messages.create(
-                        body=message,
-                        from_="13523204710",
-                        to=sub.telephone
-                    )
-                except Exception as e:
-                    pass
+"""             
+            try:
+                client.messages.create(
+                    body=message,
+                    from_="13523204710",
+                    to=sub.telephone
+                )
+            except Exception as e:
+                pass
 
 
