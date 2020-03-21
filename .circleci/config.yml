@@ -17,9 +17,9 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker exec -it project_backend_1 coverage run manage.py test subscribers
-            docker exec -it project_backend_1 coverage report
-            docker exec -it project_backend_1 coverage html --include=apps/subscribers/"*"
+            docker exec -it backend coverage run manage.py test subscribers
+            docker exec -it backend coverage report
+            docker exec -it backend coverage html --include=apps/subscribers/"*"
       - run:
           name: Copy tests
           command: |
