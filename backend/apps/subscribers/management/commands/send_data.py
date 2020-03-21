@@ -12,6 +12,9 @@ from newsapi import NewsApiClient
 import bitly_api
 import datetime
 import time
+import pytz
+
+east = pytz.timezone('US/Eastern')
 
 us_state_abbrev = {
     'Alabama': 'AL',
@@ -112,11 +115,9 @@ class Command(BaseCommand):
             for article in articles[key]:
                 article['url'] = c.shorten(article['url'])['url']
             
-        today = datetime.date.today() - datetime.timedelta(days=1)
+        today = datetime.datetime.now(east).today()
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         today = today.strftime("%m-%d-%Y")
-
-
         
         data = requests.get(
             f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{today}.csv')
@@ -188,7 +189,6 @@ class Command(BaseCommand):
                     option_string = "To add news articles to your daily updates, reply \"RENEW\""
 
                 message = f""" \n
-    Duplicate message due to error \n
     COVID-19 Updater \n
     ---------------- \n
     World Data:  \n
@@ -263,4 +263,5 @@ class Command(BaseCommand):
                     print('exception')
                     pass
             except Exception as e:
+                print(e)
                 pass

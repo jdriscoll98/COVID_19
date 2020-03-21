@@ -80,17 +80,7 @@ class SubscriberViewSet(viewsets.ModelViewSet):
                 'url': execution.url
             }
             return Response(data, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
-
-    @action(methods=['post'], detail=False, url_path='unsubscribe', url_name='unsubscribe')
-    def unsubscribe(self, request):
-        data = request.data
-        try:
-            subscriber = Subscriber.objects.get(telephone=data['number'])
-            subscriber.delete()
-            return Response(status=status.HTTP_200_OK)
-        except Exception as e:
+        else: # pragma: no cover
             return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
     @action(methods=['post'], detail=False, url_path='resend', url_name='resend')
