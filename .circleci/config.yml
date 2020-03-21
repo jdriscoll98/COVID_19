@@ -14,15 +14,6 @@ jobs:
       - run:
           name: Spin up container
           command: 'docker-compose up -d'
-      
-  test:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - run:
-          name: Spin up container
-          command: 'docker-compose up -d'
       - run:
           name: Run tests
           command: |
@@ -35,12 +26,10 @@ jobs:
             docker cp covid19_backend_1:htmlcov/ /htmlcov
       - store_artifacts:
           path: /htmlcov
-
+      
 workflows:
   version: 2
   build_and_test:
     jobs: 
       - build
-      - test:
-          requires:
-            - build
+     
