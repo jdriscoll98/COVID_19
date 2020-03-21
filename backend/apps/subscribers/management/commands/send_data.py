@@ -115,6 +115,8 @@ class Command(BaseCommand):
         today = datetime.date.today()
         yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         today = today.strftime("%m-%d-%Y")
+        today = '3-20-2020'
+        yesterday = '3-19-2020'
 
         
         data = requests.get(
