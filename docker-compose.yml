@@ -5,6 +5,7 @@ volumes:
 
 services:
   backend:
+    container_name: backend
     build:
       context: ./backend
     depends_on:
