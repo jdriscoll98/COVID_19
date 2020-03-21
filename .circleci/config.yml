@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: "make .env file"
-          command: "./makeenv"
+          command: "./makeenv.sh"
       - run:
           name: Spin up container
           command: 'docker-compose up'
