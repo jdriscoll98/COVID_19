@@ -19,6 +19,7 @@ from .country_codes import country_code as get_country_code
 
 east = pytz.timezone('US/Eastern')
 
+
 class Command(BaseCommand):
     help = 'Sends out messages to subscribers'
 
@@ -71,7 +72,7 @@ Sports:
 """
 
         # Gather dates for data fetching
-        today = datetime.datetime.now(east).today()
+        today = datetime.datetime.now(east)
         self.yesterday = (today - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         self.today = today.strftime("%m-%d-%Y")
         
