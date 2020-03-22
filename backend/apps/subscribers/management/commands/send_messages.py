@@ -104,6 +104,7 @@ Sports:
             data = requests.get(
                 f'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{self.today}.csv')
         else:
+            print('ready!')
             return True
 
     def format_data(self, date):
