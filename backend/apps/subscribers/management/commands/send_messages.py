@@ -219,6 +219,10 @@ World Data:  \n
     Recovered: {state_data['Recovered']}\n
     { state_recovered_increase} \n
 \n
+
+Did you know?
+Viruses are not alive – they are inanimate complex organic matter. They lack any form of energy, carbon metabolism, and cannot replicate or evolve. Viruses are reproduced and evolve only within cells.
+
 At anytime, text "STOP" to unsubscribe from this number. \n
 {option_string}
 """
