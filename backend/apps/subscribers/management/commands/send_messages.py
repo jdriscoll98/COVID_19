@@ -192,38 +192,34 @@ Sports:
                     option_string = self.set_option_string(sub.option)
 
 
-                    update_message = f""" \n
+                    update_message = f"""
 COVID-19 Updater \n
 ---------------- \n
-World Data:  \n
-    Confirmed: { world_data['confirmed']} \n
-    { world_data['confirmed_increase']} \n
-    Deaths: { world_data['deaths']}\n
-    { world_data['deaths_increase']}\n
-    Recovered: {world_data['recovered']}\n
-    { world_data['recovered_increase']}\n
+World Data:  
+    Confirmed: { world_data['confirmed']} 
+    { world_data['confirmed_increase']} 
+    Deaths: { world_data['deaths']}
+    { world_data['deaths_increase']}
+    Recovered: {world_data['recovered']}
+    { world_data['recovered_increase']}
 \n
-{ country_data['name']}: \n
-    Confirmed: { country_data['confirmed']} \n
-    { country_data['confirmed_increase']} \n
-    Deaths: { country_data['deaths']}\n
-    { country_data['deaths_increase']} \n
-    Recovered: {country_data['recovered']}\n
-    { country_data['recovered_increase']} \n
+{ country_data['name']}: 
+    Confirmed: { country_data['confirmed']}
+    { country_data['confirmed_increase']}
+    Deaths: { country_data['deaths']}
+    { country_data['deaths_increase']}
+    Recovered: {country_data['recovered']}
+    { country_data['recovered_increase']}
 \n
-{ state }: \n
-    Confirmed: { state_data['Confirmed']} \n
-    { state_confirmed_increase} \n
-    Deaths: { state_data['Deaths']}\n
-    { state_death_increase} \n
-    Recovered: {state_data['Recovered']}\n
-    { state_recovered_increase} \n
+{ state }: 
+    Confirmed: { state_data['Confirmed']} 
+    { state_confirmed_increase} 
+    Deaths: { state_data['Deaths']}
+    { state_death_increase} 
+    Recovered: {state_data['Recovered']}
+    { state_recovered_increase} 
 \n
-
-Did you know?
-Viruses are not alive – they are inanimate complex organic matter. They lack any form of energy, carbon metabolism, and cannot replicate or evolve. Viruses are reproduced and evolve only within cells.
-
-At anytime, text "STOP" to unsubscribe from this number. \n
+At anytime, text "STOP" to unsubscribe from this number.
 {option_string}
 """
                     # Create binding to send news bulk_text later
