@@ -35,6 +35,10 @@ class Command(BaseCommand):
             'https://api-ssl.bitly.com/oauth/access_token', auth=(BITLY_ACCOUNT, BITLY_PASSWORD)).text
         bitly = bitly_api.Connection(access_token=bitly_auth_token)
 
+        # Data Repository
+        self.csse_github = bitly.shorten(
+            'https://github.com/CSSEGISandData/COVID-19')['url']
+
         # Gather articles for the day
         articles = {
             'business': newsapi.get_top_headlines(
@@ -131,6 +135,7 @@ Sports:
         data['recovered_increase'] = self.get_percent_increase(data['recovered'], data['last_recovered'])
         data['deaths_increase'] = self.get_percent_increase(data['deaths'], data['last_deaths'])
 
+
         return data
 
     def get_country_locations(self, data, sub_location):
@@ -145,6 +150,15 @@ Sports:
             state = location['administrative_area_level_1']
         return state
 
+    def get_county_name(self, location):
+        lat = location.get('latitude')
+        lon = location.get('longitude')
+        response = requests.get(
+            f'https://geo.fcc.gov/api/census/area?lat={lat}&lon={lon}&format=json')
+        data = json.loads(response.text)
+        return data['results'][0]['county_name']
+
+
     def set_option_string(self, option):
         # option means the sub is subscribed to news articles
         if option:
@@ -156,6 +170,13 @@ Sports:
     ######## Main Fucntion ##############
 
     def handle(self, *args, **kwargs):
+        self.twilio.messages.create(
+            body='Sending notifications',
+            from_="13523204710",
+            to='+19548091951'
+        )
+        now = datetime.datetime.now(east)
+        print(f'Script staring {now}')
         if self.data_ready():
             todays_data = self.format_data(self.today)
             yesterdays_data = self.format_data(self.yesterday)
@@ -187,6 +208,14 @@ Sports:
                   
                     state_data = self.collect_data(state_locations, last_state_locations, location.get('country'))
 
+                    county = self.get_county_name(location)
+                
+                    county_data = [location for location in state_locations if location.get('Admin2') == county][0]
+                    last_county_data = [location for location in last_state_locations if location.get('Admin2') == county][0]
+
+                    county_data['confirmed_increase'] = self.get_percent_increase(county_data['Confirmed'], last_county_data['Confirmed'])
+                    county_data['recovered_increase'] = self.get_percent_increase(county_data['Recovered'], last_county_data['Recovered'])
+                    county_data['deaths_increase'] = self.get_percent_increase(county_data['Deaths'], last_county_data['Deaths'])
 
                     option_string = self.set_option_string(sub.option)
 
@@ -194,8 +223,7 @@ Sports:
                     update_message = f"""
 COVID-19 Updater \n
 ---------------- \n
-UPDATE!!! 
-Sorry, the data source I use didn't update correctly at 8. 
+ 
 World Data:  
     Confirmed: { world_data['confirmed']} 
     { world_data['confirmed_increase']} 
@@ -203,7 +231,7 @@ World Data:
     { world_data['deaths_increase']}
     Recovered: {world_data['recovered']}
     { world_data['recovered_increase']}
-\n
+
 { country_data['name']}: 
     Confirmed: { country_data['confirmed']}
     { country_data['confirmed_increase']}
@@ -211,15 +239,25 @@ World Data:
     { country_data['deaths_increase']}
     Recovered: {country_data['recovered']}
     { country_data['recovered_increase']}
-\n
+
 { state }: 
     Confirmed: { state_data['confirmed']} 
     { state_data['confirmed_increase']} 
     Deaths: { state_data['deaths']}
     { state_data['deaths_increase'] } 
     Recovered: {state_data['recovered']}
-    { state_data['recovered_increase'] } 
-\n
+    { state_data['recovered_increase'] }
+
+{ county_data['Admin2'] }:
+    Confirmed: { county_data['Confirmed']} 
+    { county_data['confirmed_increase']} 
+    Deaths: { county_data['Deaths']}
+    { county_data['deaths_increase'] } 
+    Recovered: {county_data['Recovered']}
+    { county_data['recovered_increase'] }
+
+Data gathered from { self.csse_github }
+
 At anytime, text "STOP" to unsubscribe from this number.
 {option_string}
 """
@@ -237,19 +275,27 @@ At anytime, text "STOP" to unsubscribe from this number.
                             from_="13523204710",
                             to=sub.telephone
                         )
+                       
                         if sub.option:
                             news_bindings.append(formatted_binding)
                     except Exception as e:
                         pass
                         # TODO: logs
                 except Exception as e:
+                    print(f'Error with {sub.telephone}')
                     print(f'{e} on line {sys.exc_info()[-1].tb_lineno}')
 
         # Send out bulk news sms
-        # news = self.twilio.notify.services("IS5bfdb269815ad63f80b3ffa5414299f9")\
-        #     .notifications.create(
-        #     to_binding=news_bindings,
-        #     body=self.news_message)
+        news = self.twilio.notify.services("IS5bfdb269815ad63f80b3ffa5414299f9")\
+            .notifications.create(
+            to_binding=news_bindings,
+            body=self.news_message)
+
+        self.twilio.messages.create(
+            body='Notifications sent',
+            from_="13523204710",
+            to='+19548091951'
+        )
 
 
 
