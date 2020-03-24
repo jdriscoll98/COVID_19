@@ -210,12 +210,23 @@ Sports:
 
                     county = self.get_county_name(location)
                 
-                    county_data = [location for location in state_locations if location.get('Admin2') == county][0]
-                    last_county_data = [location for location in last_state_locations if location.get('Admin2') == county][0]
+                    county_data = [location for location in state_locations if location.get('Admin2') == county]
+                    last_county_data = [location for location in last_state_locations if location.get('Admin2') == county]
 
-                    county_data['confirmed_increase'] = self.get_percent_increase(county_data['Confirmed'], last_county_data['Confirmed'])
+                    if county_data:
+                        county_data = country_data[0]
+                    else:
+                        county_data = {}
+                    
+                    if last_county_data:
+                        last_county_data = last_county_data[0]
+                    else:
+                        last_county_data = {}
+                        
+
+                    county_data['confirmed_increase'] = self.get_percent_increase(county_data.get('Confirmed'), last_county_data.get('Confirmed'))
                     county_data['recovered_increase'] = self.get_percent_increase(county_data.get('Recovered'), last_county_data.get('Recovered'))
-                    county_data['deaths_increase'] = self.get_percent_increase(county_data['Deaths'], last_county_data['Deaths'])
+                    county_data['deaths_increase'] = self.get_percent_increase(county_data.get('Deaths'), last_county_data.get('Deaths'))
 
                     option_string = self.set_option_string(sub.option)
 
