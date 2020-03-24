@@ -13,6 +13,7 @@ import bitly_api
 import datetime
 import time
 import pytz
+import sys
 
 from .states import abbrev_us_state
 from .country_codes import country_code as get_country_code
@@ -134,7 +135,7 @@ Sports:
 
     def get_country_locations(self, data, sub_location):
         country_code = get_country_code(sub_location.get('country'))
-        return [location for location in data if (location['Country/Region'] == country_code or location['Country/Region'] == sub_location.get('country'))]
+        return [location for location in data if location.get('Country_Region', location.get('Country/Region')) == country_code or (location.get('Country_Region', location.get('Country/Region'))) == sub_location.get('country')]
 
     def get_state_name(self, location):
         # States are abbreviated, provinces are not.
@@ -180,14 +181,12 @@ Sports:
                     country_data = self.collect_data(today_country_locations, last_country_locations, location.get('country'))
 
                     state = self.get_state_name(location)
-                  
-                    # Single state/province already in dict format so no need to use collect_data
-                    state_data = [location for location in today_country_locations if location['Province/State'] == state][0]
-                    last_state_data = [location for location in last_country_locations if location['Province/State'] == state][0]
 
-                    state_confirmed_increase = self.get_percent_increase(int(state_data['Confirmed']), int(last_state_data['Confirmed']))
-                    state_recovered_increase = self.get_percent_increase(int(state_data['Recovered']), int(last_state_data['Recovered']))
-                    state_death_increase = self.get_percent_increase(int(state_data['Deaths']), int(last_state_data['Deaths']))
+                    state_locations = [location for location in today_country_locations if location.get('Province_State', location.get('Province/State')) == state]
+                    last_state_locations = [location for location in last_country_locations if location.get('Province_State', location.get('Province/State')) == state]
+                  
+                    state_data = self.collect_data(state_locations, last_state_locations, location.get('country'))
+
 
                     option_string = self.set_option_string(sub.option)
 
@@ -195,6 +194,8 @@ Sports:
                     update_message = f"""
 COVID-19 Updater \n
 ---------------- \n
+UPDATE!!! 
+Sorry, the data source I use didn't update correctly at 8. 
 World Data:  
     Confirmed: { world_data['confirmed']} 
     { world_data['confirmed_increase']} 
@@ -212,12 +213,12 @@ World Data:
     { country_data['recovered_increase']}
 \n
 { state }: 
-    Confirmed: { state_data['Confirmed']} 
-    { state_confirmed_increase} 
-    Deaths: { state_data['Deaths']}
-    { state_death_increase} 
-    Recovered: {state_data['Recovered']}
-    { state_recovered_increase} 
+    Confirmed: { state_data['confirmed']} 
+    { state_data['confirmed_increase']} 
+    Deaths: { state_data['deaths']}
+    { state_data['deaths_increase'] } 
+    Recovered: {state_data['recovered']}
+    { state_data['recovered_increase'] } 
 \n
 At anytime, text "STOP" to unsubscribe from this number.
 {option_string}
@@ -242,7 +243,7 @@ At anytime, text "STOP" to unsubscribe from this number.
                         pass
                         # TODO: logs
                 except Exception as e:
-                    print(e)
+                    print(f'{e} on line {sys.exc_info()[-1].tb_lineno}')
 
         # Send out bulk news sms
         news = self.twilio.notify.services("IS5bfdb269815ad63f80b3ffa5414299f9")\
