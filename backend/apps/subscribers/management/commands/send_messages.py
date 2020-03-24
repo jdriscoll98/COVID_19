@@ -246,10 +246,10 @@ At anytime, text "STOP" to unsubscribe from this number.
                     print(f'{e} on line {sys.exc_info()[-1].tb_lineno}')
 
         # Send out bulk news sms
-        news = self.twilio.notify.services("IS5bfdb269815ad63f80b3ffa5414299f9")\
-            .notifications.create(
-            to_binding=news_bindings,
-            body=self.news_message)
+        # news = self.twilio.notify.services("IS5bfdb269815ad63f80b3ffa5414299f9")\
+        #     .notifications.create(
+        #     to_binding=news_bindings,
+        #     body=self.news_message)
 
 
 
