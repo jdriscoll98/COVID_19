@@ -127,8 +127,8 @@ Sports:
             'last_confirmed': sum(map(lambda latest: int(latest['Confirmed']), yesterdays_data)),
             'deaths': sum(map(lambda latest: int(latest['Deaths']), todays_data)),
             'last_deaths': sum(map(lambda latest: int(latest['Deaths']), yesterdays_data)),
-            'recovered': sum(map(lambda latest: int(latest['Recovered']), todays_data)),
-            'last_recovered': sum(map(lambda latest: int(latest['Recovered']), yesterdays_data)),
+            'recovered': sum(map(lambda latest: int(latest.get('Recovered')), todays_data)),
+            'last_recovered': sum(map(lambda latest: int(latest.get('Recovered'), yesterdays_data)),
         }
 
         data['confirmed_increase'] = self.get_percent_increase(data['confirmed'], data['last_confirmed'])
@@ -214,7 +214,7 @@ Sports:
                     last_county_data = [location for location in last_state_locations if location.get('Admin2') == county][0]
 
                     county_data['confirmed_increase'] = self.get_percent_increase(county_data['Confirmed'], last_county_data['Confirmed'])
-                    county_data['recovered_increase'] = self.get_percent_increase(county_data['Recovered'], last_county_data['Recovered'])
+                    county_data['recovered_increase'] = self.get_percent_increase(county_data.get('Recovered'), last_county_data.get('Recovered'))
                     county_data['deaths_increase'] = self.get_percent_increase(county_data['Deaths'], last_county_data['Deaths'])
 
                     option_string = self.set_option_string(sub.option)
