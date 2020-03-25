@@ -128,7 +128,7 @@ Sports:
             'deaths': sum(map(lambda latest: int(latest['Deaths']), todays_data)),
             'last_deaths': sum(map(lambda latest: int(latest['Deaths']), yesterdays_data)),
             'recovered': sum(map(lambda latest: int(latest.get('Recovered')), todays_data)),
-            'last_recovered': sum(map(lambda latest: int(latest.get('Recovered'), yesterdays_data)),
+            'last_recovered': sum(map(lambda latest: int(latest.get('Recovered')), yesterdays_data)),
         }
 
         data['confirmed_increase'] = self.get_percent_increase(data['confirmed'], data['last_confirmed'])
@@ -214,7 +214,7 @@ Sports:
                     last_county_data = [location for location in last_state_locations if location.get('Admin2') == county]
 
                     if county_data:
-                        county_data = country_data[0]
+                        county_data = county_data[0]
                     else:
                         county_data = {}
                     
@@ -224,9 +224,9 @@ Sports:
                         last_county_data = {}
                         
 
-                    county_data['confirmed_increase'] = self.get_percent_increase(county_data.get('Confirmed'), last_county_data.get('Confirmed'))
-                    county_data['recovered_increase'] = self.get_percent_increase(county_data.get('Recovered'), last_county_data.get('Recovered'))
-                    county_data['deaths_increase'] = self.get_percent_increase(county_data.get('Deaths'), last_county_data.get('Deaths'))
+                    county_data['confirmed_increase'] = self.get_percent_increase(int(county_data.get('Confirmed')), int(last_county_data.get('Confirmed')))
+                    county_data['recovered_increase'] = self.get_percent_increase(int(county_data.get('Recovered')), int(last_county_data.get('Recovered')))
+                    county_data['deaths_increase'] = self.get_percent_increase(int(county_data.get('Deaths')), int(last_county_data.get('Deaths')))
 
                     option_string = self.set_option_string(sub.option)
 
