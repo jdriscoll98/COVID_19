@@ -268,6 +268,7 @@ World Data:
     { county_data['recovered_increase'] }
 
 Data gathered from { self.csse_github }
+For live updates, visit https://ncov2019.live/ \n (cred to Avi Schiffmann)
 
 At anytime, text "STOP" to unsubscribe from this number.
 {option_string}
