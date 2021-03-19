@@ -52,7 +52,7 @@ pycountry==19.8.18
 newsapi-python==0.2.6
 git+https://github.com/bitly/bitly-api-python/@refs/pull/41/merge
 
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 
 
 
